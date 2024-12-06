@@ -16,7 +16,9 @@
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/mapped-types": "^2.0.6",
     "@nestjs/platform-fastify": "^10.4.13",
+    "dotenv": "^16.4.7",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "zuimi_backend": "file:"
