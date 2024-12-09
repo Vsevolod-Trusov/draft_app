@@ -12,8 +12,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "prepare": "husky",
-    "prisma:build_schema": "pnpm exec prisma migrate dev --name init --schema ./src/frameworks/database/prisma/postgresql/schema.prisma",
-    "prisma:generate_models": "pnpm exec prisma generate --schema ./src/frameworks/database/prisma/postgresql/schema.prisma"
+    "prisma:build_schema": "pnpm exec prisma migrate dev --name init --schema ./src/frameworks/database/postgresql/schema.prisma",
+    "prisma:generate_client": "pnpm exec prisma generate --schema ./src/frameworks/database/postgresql/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

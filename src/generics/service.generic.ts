@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
-import { AbstractBaseService, BaseRepository, DatabaseOptions } from "gateways";
+import { AbstractBaseService, BaseRepository, DatabaseOptions } from 'gateways';
 
 @Injectable()
 export class BaseService<T> extends AbstractBaseService {
