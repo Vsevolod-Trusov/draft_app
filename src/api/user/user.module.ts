@@ -1,16 +1,16 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 
-import { AbstractBaseService } from "gateways";
+import { AbstractBaseUseCase } from 'gateways';
 
-import { UserController } from "./user.controller";
-import { UserService } from "./user.service";
+import { UserController } from './user.controller';
+import { UserUseCase } from './user.use-case';
 
 @Module({
   controllers: [UserController],
   providers: [
     {
-      provide: AbstractBaseService,
-      useClass: UserService,
+      provide: AbstractBaseUseCase,
+      useClass: UserUseCase,
     },
   ],
 })

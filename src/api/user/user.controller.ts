@@ -1,21 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-import { Params, Routes } from "data";
-import { AbstractBaseService } from "gateways";
+import { Params, Routes } from 'data';
+import { AbstractBaseUseCase } from 'gateways';
 
-import { PartialUserDto, UserDto } from "./user.dto";
+import { PartialUserDto, UserDto } from './user.dto';
+
+@ApiTags('Users')
 @Controller(Routes.UsersURL)
 export class UserController {
-  constructor(private readonly _userService: AbstractBaseService) {}
+  constructor(private readonly _userService: AbstractBaseUseCase) {}
 
   @Post()
   create(@Body() user: UserDto) {
@@ -38,10 +32,7 @@ export class UserController {
   }
 
   @Patch(Routes.ById)
-  partialUpdate(
-    @Param(Params.Id) id: string,
-    @Body() updateUserDto: PartialUserDto
-  ) {
+  partialUpdate(@Param(Params.Id) id: string, @Body() updateUserDto: PartialUserDto) {
     return this._userService.updateOne({ filter: { id: id } }, updateUserDto);
   }
 
