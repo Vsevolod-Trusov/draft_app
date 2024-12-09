@@ -1,38 +1,21 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 
 import { UserEntity } from "frameworks";
-import { BaseService, DatabaseService, ServiceOptions } from "gateways";
 
-import { PartialUserDto, UserDto } from "./user.dto";
+import { ExceptionMessage } from "data";
+import { DatabaseService, UserServiceOptions } from "gateways";
+import { BaseService } from "generics";
 
 @Injectable()
-export class UserService extends BaseService {
+export class UserService extends BaseService<UserEntity> {
   constructor(private readonly _dataService: DatabaseService) {
-    super();
+    super(_dataService.userRepository);
   }
 
-  getAll(options: ServiceOptions = {}): Promise<Array<UserEntity>> {
+  getAll(options: UserServiceOptions = {}): Promise<Array<UserEntity>> {
+    if (Object.keys(options).length <= 0)
+      throw new BadRequestException(ExceptionMessage.WrongUserOptions);
+
     return this._dataService.userRepository.findAll();
-  }
-  getOne(options: ServiceOptions): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-  createOne(UserEntity: UserDto): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-  createMany(UserEntitys: Array<UserDto>): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-  updateOne(
-    options: ServiceOptions,
-    updateUserEntity: PartialUserDto
-  ): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-  updateMany(): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-  remove(options: ServiceOptions): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
   }
 }

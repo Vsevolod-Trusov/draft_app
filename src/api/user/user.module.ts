@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { BaseService } from "gateways";
+import { AbstractBaseService } from "gateways";
 
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
@@ -9,7 +9,7 @@ import { UserService } from "./user.service";
   controllers: [UserController],
   providers: [
     {
-      provide: BaseService,
+      provide: AbstractBaseService,
       useClass: UserService,
     },
   ],

@@ -1,4 +1,4 @@
-abstract class BaseService {
+abstract class AbstractBaseService {
   abstract getAll(options?: unknown): Promise<unknown>;
   abstract getOne(options: unknown): Promise<unknown>;
   abstract createOne(entityOne: unknown): Promise<unknown>;
@@ -6,4 +6,4 @@ abstract class BaseService {
   abstract remove(options: unknown): Promise<unknown>;
 }
 
-export { BaseService };
+export { AbstractBaseService };

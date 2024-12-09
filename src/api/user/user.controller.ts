@@ -6,38 +6,47 @@ import {
   Param,
   Patch,
   Post,
+  Put,
 } from "@nestjs/common";
 
-import { BaseService } from "gateways";
+import { Params, Routes } from "data";
+import { AbstractBaseService } from "gateways";
 
 import { PartialUserDto, UserDto } from "./user.dto";
-@Controller("user")
+@Controller(Routes.UsersURL)
 export class UserController {
-  constructor(private readonly _userService: BaseService) {}
+  constructor(private readonly _userService: AbstractBaseService) {}
 
   @Post()
   create(@Body() user: UserDto) {
     return this._userService.createOne(user);
   }
 
-  //http://localhost:3000/user
   @Get()
   getAll() {
     return this._userService.getAll();
   }
 
-  @Get(":id")
-  getOne(@Param("id") id: string) {
+  @Get(Routes.ById)
+  getOne(@Param(Params.Id) id: string) {
     return this._userService.getOne({ filter: { id: id } });
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: PartialUserDto) {
+  @Put(Routes.ById)
+  update(@Param(Params.Id) id: string, @Body() updateUserDto: PartialUserDto) {
     return this._userService.updateOne({ filter: { id: id } }, updateUserDto);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
+  @Patch(Routes.ById)
+  partialUpdate(
+    @Param(Params.Id) id: string,
+    @Body() updateUserDto: PartialUserDto
+  ) {
+    return this._userService.updateOne({ filter: { id: id } }, updateUserDto);
+  }
+
+  @Delete(Routes.ById)
+  remove(@Param(Params.Id) id: string) {
     return this._userService.remove({ filter: { id: id } });
   }
 }

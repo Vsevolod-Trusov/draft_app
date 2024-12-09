@@ -1,8 +1,8 @@
-import { UserDto } from 'api/user/user.dto';
-import { DatabaseOptions } from './database-filter.interface';
+import { UserDto } from "api/user/user.dto";
+import { DatabaseOptions } from "./database-filter.interface";
 
-interface ServiceOptions extends DatabaseOptions<UserDto> {
+interface UserServiceOptions extends DatabaseOptions<UserDto> {
   payload?: Record<string, unknown>;
 }
 
-export { ServiceOptions };
+export { UserServiceOptions };

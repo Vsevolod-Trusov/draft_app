@@ -10,7 +10,7 @@ abstract class BaseRepository<T> {
     options: DatabaseOptions<T>,
     updateEntities: Array<T>
   ): Promise<Array<T>>;
-  abstract remove(options: DatabaseOptions<T>): Promise<Array<T>>;
+  abstract remove(options: DatabaseOptions<T>): Promise<T>;
 }
 
 export { BaseRepository };
