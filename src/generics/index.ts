@@ -1,1 +1,1 @@
-export * from "./service.generic";
+export * from './base-use-case.generic';
