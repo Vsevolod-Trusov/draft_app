@@ -1,6 +1,6 @@
-import { UserEntity } from "frameworks";
+import { UserEntity } from 'frameworks';
 
-import { BaseRepository } from "./repository";
+import { BaseRepository } from './repository';
 
 abstract class DatabaseService {
   public userRepository: BaseRepository<UserEntity>;

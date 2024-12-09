@@ -3,6 +3,10 @@ enum NodeEnv {
   Stage = 'stage',
   Testing = 'test',
   Production = 'production',
+  SecretAccess = 'ACCESS_SECRET',
+  PeriodAccess = 'ACCESS_PERIOD',
+  SecretRefresh = 'REFRESH_SECRET',
+  PeriodRefresh = 'REFRESH_PERIOD',
 }
 
 enum EnvFiles {
