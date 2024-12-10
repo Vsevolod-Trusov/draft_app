@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Params, Routes } from 'data';
+import { Params, Routes } from 'core/data';
 import { AbstractBaseUseCase } from 'gateways';
 
 import { PartialUserDto, UserDto } from './user.dto';

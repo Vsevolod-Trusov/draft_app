@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { ExceptionMessage } from 'data';
+import { ExceptionMessage } from 'core/data';
 import { UserEntity } from 'frameworks';
 
 import { DatabaseService, UserServiceOptions } from 'gateways';
