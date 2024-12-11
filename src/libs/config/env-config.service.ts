@@ -1,6 +1,6 @@
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 
 import { DependenciesNames, EnvFiles, NodeEnv } from 'core/data';
 import * as dotenv from 'dotenv';
