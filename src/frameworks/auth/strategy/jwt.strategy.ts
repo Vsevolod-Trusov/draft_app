@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
 import { UserPayload } from 'api';
-import { JwtStrategyNames, NodeEnv } from 'core';
+import { DependenciesNames, JwtStrategyNames, NodeEnv } from 'core';
 import { FastifyRequest } from 'fastify';
 import { ConfigServiceActions } from 'gateways';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -10,7 +10,10 @@ import { checkIncomingPayload } from 'utils';
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, JwtStrategyNames.Access) {
-  constructor(private readonly _configService: ConfigServiceActions) {
+  constructor(
+    @Inject(DependenciesNames.ConfigServiceActions)
+    private readonly _configService: ConfigServiceActions,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),

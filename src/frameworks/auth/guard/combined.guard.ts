@@ -1,18 +1,18 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
-import { Reflector } from "@nestjs/core";
+import { Reflector } from '@nestjs/core';
 
-import { IS_PUBLIC_KEY } from "core";
+import { IS_PUBLIC_KEY } from 'core';
 
-import { CustomAuthGuard } from "./auth.guard";
-import { RoleGuard } from "./role.guard";
+import { CustomAuthGuard } from './auth.guard';
+import { RoleGuard } from './role.guard';
 
 @Injectable()
 export class CombinedGuard implements CanActivate {
   constructor(
     private readonly _customAuthGuard: CustomAuthGuard,
     private readonly _roleGuard: RoleGuard,
-    private readonly _reflector: Reflector
+    private readonly _reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

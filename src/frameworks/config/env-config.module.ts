@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { DependenciesNames } from 'core/data';
 
 import { ConfigService } from './env-config.service';
-
 @Module({})
 export class EnvConfigModule {
   static forRoot(options): DynamicModule {
