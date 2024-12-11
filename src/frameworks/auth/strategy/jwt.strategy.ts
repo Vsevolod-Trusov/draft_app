@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
-import { UserPayload } from 'api';
+import { UserPayload } from 'app';
 import { DependenciesNames, JwtStrategyNames, NodeEnv } from 'core';
+import { checkIncomingPayload } from 'core/utils';
 import { FastifyRequest } from 'fastify';
 import { ConfigServiceActions } from 'gateways';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { checkIncomingPayload } from 'utils';
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, JwtStrategyNames.Access) {

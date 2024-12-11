@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 
-import { ControllersModule } from 'api';
 import { AuthModule, CombinedGuard, DatabaseModule, EnvConfigModule, options } from 'frameworks';
+
+import { ControllersModule } from './modules';
 
 @Module({
   imports: [EnvConfigModule.forRoot(options), AuthModule, DatabaseModule, ControllersModule],

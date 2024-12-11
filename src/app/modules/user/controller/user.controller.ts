@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Params, Routes } from 'core/data';
+import { Params, Routes } from 'core';
 import { AbstractBaseUseCase } from 'gateways';
 
-import { PartialUserDto, UserDto } from './user.dto';
+import { PartialUserDto, UserDto } from '../dto/user.dto';
 
 @ApiTags('Users')
 @Controller(Routes.UsersURL)

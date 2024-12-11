@@ -1,6 +1,7 @@
+import { PrismaClient } from '@prisma/client';
 import { DatabaseOptions } from './database-filter.interface';
 
-abstract class BaseRepository<T> {
+abstract class BaseRepository<T> extends PrismaClient {
   abstract findAll(options?: DatabaseOptions<T>): Promise<Array<T>>;
   abstract findOne(options: DatabaseOptions<T>): Promise<T>;
   abstract createOne(creatingEntity: T): Promise<T>;

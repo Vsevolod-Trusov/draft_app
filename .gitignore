@@ -3,7 +3,11 @@
 *.prettierignore
 *.prettierrc
 lint-staged.config.js
-/env-config
+
+.develop.env
+.stage.env
+.test.env
+.production.env
 
 # compiled output
 /dist

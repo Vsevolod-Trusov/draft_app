@@ -2,9 +2,9 @@ import fastifyCookie, { FastifyCookieOptions } from '@fastify/cookie';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
-import { getSwaggerConfig } from './utils'; // Убедитесь, что путь правильный
+import { getSwaggerConfig } from './core/utils'; // Убедитесь, что путь правильный
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

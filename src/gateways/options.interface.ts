@@ -1,4 +1,5 @@
-import { UserDto } from 'api/user/user.dto';
+import { UserDto } from 'app';
+
 import { DatabaseOptions } from './database-filter.interface';
 
 interface UserServiceOptions extends DatabaseOptions<UserDto> {

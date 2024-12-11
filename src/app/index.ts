@@ -1,2 +1,2 @@
-export * from './controllers.module';
-export * from './user';
+export * from './app.module';
+export * from './modules';

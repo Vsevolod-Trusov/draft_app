@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { GenericBaseUseCase } from 'core';
 import { UserEntity } from 'frameworks';
-
 import { DatabaseService } from 'gateways';
-import { GenericBaseUseCase } from 'generics';
 
 @Injectable()
 export class UserUseCase extends GenericBaseUseCase<UserEntity> {

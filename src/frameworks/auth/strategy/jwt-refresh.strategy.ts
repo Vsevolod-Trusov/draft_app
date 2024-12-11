@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
-import { UserPayload } from 'api';
+import { UserPayload } from 'app';
 import { DependenciesNames, HeaderNames, JwtStrategyNames, NodeEnv } from 'core/data';
+import { checkIncomingPayload } from 'core/utils';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { AbstractAuthService, ConfigServiceActions } from 'gateways';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { checkIncomingPayload } from 'utils';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, JwtStrategyNames.Refresh) {

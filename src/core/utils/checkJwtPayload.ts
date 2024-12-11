@@ -1,6 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 
-import { UserPayload } from 'api';
+import { UserPayload } from 'app';
 
 export const checkIncomingPayload = (incomingPayload: unknown): UserPayload => {
   let payload: UserPayload;
