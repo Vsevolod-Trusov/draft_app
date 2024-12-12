@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Params, Routes } from 'core';
+import { Params, Public, Routes } from 'core';
 import { AbstractBaseUseCase } from 'gateways';
 
 import { PartialUserDto, UserDto } from '../dto/user.dto';
 
 @ApiTags('Users')
+@Public()
 @Controller(Routes.UsersURL)
 export class UserController {
   constructor(private readonly _userService: AbstractBaseUseCase) {}
@@ -14,6 +15,12 @@ export class UserController {
   @Post()
   create(@Body() user: UserDto) {
     return this._userService.createOne(user);
+  }
+
+  @Get('/fail')
+  fail() {
+    process.exit(-1);
+    throw new Error('server failed');
   }
 
   @Get()

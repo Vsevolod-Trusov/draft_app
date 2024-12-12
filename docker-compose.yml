@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  zumi-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zumi-backend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      DATABASE_CONNECTION_STRING: postgresql://user:1234@127.0.0.1:5432/shadow_test?schema=draft_app
+      ACCESS_SECRET: TESTETSE
+      REFRESH_SECRET: TESTETSE
+      ACCESS_PERIOD: 1d
+      REFRESH_PERIOD: 5d
+    command: ['pnpm', 'pm2:dev']
+#   postgres:
+#     image: postgres:13
+#     container_name: postgres
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_DB: nestdb
+#     ports:
+#       - '5432:5432'
+#     volumes:
+#       - postgres-data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres-data:
+#     driver: local

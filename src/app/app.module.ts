@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 
-import { AuthModule, CombinedGuard, DatabaseModule, EnvConfigModule, options } from 'libs';
+import { EnvConfigModule, options } from 'config';
+import { AuthModule, CombinedGuard, DatabaseModule } from 'libs';
 
 import { ControllersModule } from './modules';
 
