@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { UserEntity } from 'frameworks';
+
+import { UserEntity } from 'libs';
 
 class UserDto extends UserEntity {
   payload: Record<string, unknown>;

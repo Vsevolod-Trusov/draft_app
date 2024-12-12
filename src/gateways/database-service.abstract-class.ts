@@ -1,4 +1,4 @@
-import { UserEntity } from 'frameworks';
+import { UserEntity } from 'libs';
 
 import { BaseRepository } from './repository';
 
