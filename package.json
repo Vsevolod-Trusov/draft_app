@@ -9,7 +9,7 @@
     "build": "nest build",
     "start": "nest start --watch",
     "prepare": "husky",
-    "pm2:dev": "pnpm build && cross-env NODE_ENV=develop  pm2 start ecosystem.config.js --env develop",
+    "pm2:dev": "pnpm build && pnpm prisma:build_dev_schema && cross-env NODE_ENV=develop  pm2 start ecosystem.config.js --env develop --no-daemon",
     "pm2:prod": "pnpm build && cross-env NODE_ENV=production  pm2 start ecosystem.config.js --env production",
     "pm2:stage": "pnpm build && cross-env NODE_ENV=stage  pm2 start ecosystem.config.js --env stage",
     "pm2:test": "pnpm build && cross-env NODE_ENV=test  pm2 start ecosystem.config.js --env test",

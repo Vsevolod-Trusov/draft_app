@@ -1,27 +1,17 @@
-# Используем официальный образ Node.js
-FROM node:20
+FROM node:22
 
-# Устанавливаем рабочую директорию
 WORKDIR /zumi-backend
 
-# Копируем package.json и package-lock.json в контейнер
-COPY package*.json ./
+COPY package*.json pnpm-lock.yaml ./
 
-# Устанавливаем зависимости с помощью npm
-RUN npm install
-RUN npm install -g @nestjs/cli
+RUN npm install -g pnpm
+RUN npm install -g pm2
+RUN pnpm install
 
-# Копируем все файлы проекта в контейнер
 COPY . .
 
-# Проверяем установленную версию npm
-RUN npm -v
+RUN pnpm prisma:generate_client
+# RUN pnpm prisma:build_dev_schema
+RUN pnpm run build
 
-# Строим проект с использованием локальной версии NestJS CLI
-RUN npx nest build
-
-# Открываем порт 3000 для приложения
-EXPOSE 3000
-
-# Запускаем приложение с помощью pm2
-CMD ["npm", "run", "pm2:dev"]
+CMD ["node", "dist/main"]
