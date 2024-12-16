@@ -8,7 +8,7 @@ import { PartialUserDto, UserDto } from '../dto/user.dto';
 
 @ApiTags('Users')
 @Public()
-@Controller(Routes.UsersURL)
+@Controller(Routes.UsersPrefix)
 export class UserController {
   constructor(private readonly _userService: AbstractBaseUseCase) {}
 
