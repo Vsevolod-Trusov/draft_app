@@ -1,5 +1,7 @@
 enum Routes {
-  UsersURL = 'users',
+  UsersPrefix = 'users',
+  MailPrefix = 'mail',
+  Send = 'send',
   ById = ':id',
 }
 

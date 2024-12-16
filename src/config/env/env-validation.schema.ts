@@ -7,8 +7,8 @@ export const envFileValidationSchema = Joi.object({
   ACCESS_PERIOD: Joi.string().required(),
   REFRESH_PERIOD: Joi.string().required(),
   MAIL_HOST: Joi.string().required(),
-  MAIL_APP: Joi.string().required(),
-  MAIL_PASSWORD: Joi.string().required(),
-  MAIL_PORT: Joi.string().required(),
-  MAILER_SECURE: Joi.string().required(),
+  MAIL_CREDENTIALS_LOGIN: Joi.string().required(),
+  MAIL_CREDENTIALS_PASSWORD: Joi.string().required(),
+  MAIL_PORT: Joi.number().required(),
+  MAIL_SECURITY_FLAG: Joi.string().required(),
 });

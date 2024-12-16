@@ -24,7 +24,7 @@
     "prisma:build_prod_schema": "dotenv -e ./.production.env -- pnpm exec prisma migrate dev --name init --schema ./src/libs/database/postgresql/schema.prisma",
     "prisma:generate_client": "pnpm exec prisma generate --schema ./src/libs/database/postgresql/schema.prisma",
     "docker:build_dev": "docker-compose build",
-    "docker:run_dev": "docker-compose up"
+    "docker:run_dev_after_build": "pnpm docker:build_dev && docker-compose up"
   },
   "dependencies": {
     "@fastify/cookie": "6.0.0",
