@@ -1,35 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { DEVELOP_MESSAGE, EMAIL_TITLE, MESSAGE_NAME } from 'core';
-import { Transporter, createTransport } from 'nodemailer';
+
+import { DEVELOP_MESSAGE, EMAIL_TITLE, MESSAGE_NAME, NodeEnv } from 'core';
+import { IMailService } from 'gateways';
+import { createTransport, Transporter } from 'nodemailer'; // поправил имя функции (должно быть `createTransport`)
 
 import { MailData } from './types';
 
 @Injectable()
-export class MailingService {
-  private transporter: Transporter;
-
+export class MailService implements IMailService {
+  private readonly _transporter: Transporter;
   constructor() {
-    this.transporter = createTransport(
-      {
-        host: process.env.MAIL_HOST,
-        port: Number(process.env.MAIL_PORT),
-        secure: process.env.MAILER_SECURE === 'true',
-        auth: {
-          user: process.env.APP,
-          pass: process.env.MAIL_PASSWORD,
-        },
+    const mailOptions = {
+      host: process.env[NodeEnv.MailHost],
+      port: +process.env[NodeEnv.MailPort],
+      secure: process.env[NodeEnv.MailSecurityFlag] === 'true',
+      auth: {
+        user: process.env[NodeEnv.MailCredentialsLogin],
+        pass: process.env[NodeEnv.MailCredentialsPassword],
       },
-      {
-        from: {
-          name: MESSAGE_NAME,
-          address: process.env.APP,
-        },
+    };
+    const senderMessageMetadata = {
+      from: {
+        name: MESSAGE_NAME,
+        address: process.env[NodeEnv.MailCredentialsLogin],
       },
-    );
+    };
+    this._transporter = createTransport(mailOptions, senderMessageMetadata);
   }
 
-  sendMail({ receiver }: MailData) {
-    return this.transporter.sendMail({
+  send({ receiver }: MailData) {
+    return this._transporter.sendMail({
       to: receiver,
       subject: EMAIL_TITLE,
       text: DEVELOP_MESSAGE,
