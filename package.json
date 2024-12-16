@@ -22,7 +22,9 @@
     "prisma:build_test_schema": "dotenv -e ./.test.env -- pnpm exec prisma migrate dev --name init --schema ./src/libs/database/postgresql/schema.prisma",
     "prisma:build_stage_schema": "dotenv -e ./.stage.env -- pnpm exec prisma migrate dev --name init --schema ./src/libs/database/postgresql/schema.prisma",
     "prisma:build_prod_schema": "dotenv -e ./.production.env -- pnpm exec prisma migrate dev --name init --schema ./src/libs/database/postgresql/schema.prisma",
-    "prisma:generate_client": "pnpm exec prisma generate --schema ./src/libs/database/postgresql/schema.prisma"
+    "prisma:generate_client": "pnpm exec prisma generate --schema ./src/libs/database/postgresql/schema.prisma",
+    "docker:build_dev": "docker-compose build",
+    "docker:run_dev": "docker-compose up"
   },
   "dependencies": {
     "@fastify/cookie": "6.0.0",
@@ -41,6 +43,7 @@
     "dotenv-cli": "^7.4.4",
     "fastify": "^5.1.0",
     "joi": "^17.13.3",
+    "nodemailer": "^6.9.16",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
