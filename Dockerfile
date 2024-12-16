@@ -11,7 +11,6 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm prisma:generate_client
-# RUN pnpm prisma:build_dev_schema
+
 RUN pnpm run build
 
-CMD ["node", "dist/main"]

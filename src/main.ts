@@ -3,38 +3,49 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule } from '@nestjs/swagger';
 
-import { AppModule } from './app/app.module';
-import { getSwaggerConfig } from './core';
+import { AppModule } from './app';
+import {
+  DEFAULT_ADDRESS,
+  DEFAULT_PORT,
+  getSwaggerConfig,
+  NodeEnv,
+  printWelcome,
+  Routes,
+  UNKNOWN_INSTANCE,
+} from './core';
 
-const STAGE = process.env.NODE_ENV.toUpperCase();
-const PORT = process.env.PORT ?? 3000;
+const STAGE = process.env.NODE_ENV.toUpperCase() || UNKNOWN_INSTANCE;
+const PORT = process.env.BACKEND_PORT ?? DEFAULT_PORT;
+const ADDRESS = process.env.BACKEND_ADDRESS ?? DEFAULT_ADDRESS;
+const isDevelop = process?.env.NODE_ENV === NodeEnv.Develop || process?.env.NODE_ENV === NodeEnv.Local;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(process?.env.NODE_ENV === 'dev' ? { logger: true } : {}),
+    new FastifyAdapter(isDevelop ? { logger: true } : {}),
   );
 
   const cookiePlugin = fastifyCookie as unknown as any;
 
   app.register(cookiePlugin, {
-    secret: 'my-secret',
+    secret: process.env.COOKIE_SECRET,
   } as FastifyCookieOptions);
 
-  const config = getSwaggerConfig();
-  const document = SwaggerModule.createDocument(app, config);
+  app.setGlobalPrefix(Routes.ApiV1);
 
-  SwaggerModule.setup('api', app, document);
+  if (isDevelop) {
+    const config = getSwaggerConfig();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup(`${Routes.ApiV1}/${Routes.Swagger}`, app, document);
+  }
+
   app.enableCors({
     origin: true,
     credentials: true,
   });
 
-  await app.listen(PORT, '::', () => {
-    console.log(`
-      ---------------------------------------------------
-      [ZUMI-BACKEND-${STAGE}] address: :: port:${PORT}
-      ---------------------------------------------------`);
+  await app.listen(PORT, ADDRESS, () => {
+    printWelcome(STAGE, ADDRESS, PORT);
   });
 }
 

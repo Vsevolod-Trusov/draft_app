@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 
+import { isEnvsComeFromOutside } from 'core';
 import { DependenciesNames, EnvFiles, NodeEnv } from 'core/data';
 import * as dotenv from 'dotenv';
 import { ConfigServiceActions, EnvConfigFile, EnvConfigOptions } from 'gateways';
@@ -30,6 +31,10 @@ export class ConfigService implements ConfigServiceActions {
         filePath = EnvFiles.Testing;
         break;
       }
+      case NodeEnv.Local: {
+        filePath = EnvFiles.Local;
+        break;
+      }
       default: {
         filePath = EnvFiles.Stage;
         break;
@@ -40,6 +45,10 @@ export class ConfigService implements ConfigServiceActions {
 
     fs.readFile(envFile, (exception, data) => {
       if (exception) {
+        if (isEnvsComeFromOutside()) {
+          return;
+        }
+
         throw new InternalServerErrorException(exception.message);
       }
 

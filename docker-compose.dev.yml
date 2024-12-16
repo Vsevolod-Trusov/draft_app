@@ -13,12 +13,20 @@ services:
     depends_on:
       - postgres
     environment:
-      NODE_ENV: development
+      NODE_ENV: develop
+      BACKEND_PORT: 3000
+      BACKEND_ADDRESS: '::'
       DATABASE_CONNECTION_STRING: postgresql://user:1234@postgres:5432/shadow_test?schema=draft_app
       ACCESS_SECRET: TESTETSE
       REFRESH_SECRET: TESTETSE
       ACCESS_PERIOD: 1d
       REFRESH_PERIOD: 5d
+      MAIL_HOST: smtp.ethereal.email
+      MAIL_CREDENTIALS_LOGIN: loraine.wintheiser@ethereal.email
+      MAIL_CREDENTIALS_PASSWORD: aT5e5EWdX2MAKewsyJ
+      MAIL_PORT: 587
+      MAIL_SECURITY_FLAG: false
+      COOKIE_SECRET: test-secret
     command: ['pnpm', 'pm2:dev']
   postgres:
     image: postgres:13

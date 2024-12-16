@@ -1,5 +1,6 @@
 enum NodeEnv {
   Develop = 'develop',
+  Local = 'local',
   Stage = 'stage',
   Testing = 'test',
   Production = 'production',
@@ -16,6 +17,7 @@ enum NodeEnv {
 
 enum EnvFiles {
   Develop = '.develop.env',
+  Local = '.local.env',
   Stage = '.stage.env',
   Testing = '.test.env',
   Production = '.production.env',
