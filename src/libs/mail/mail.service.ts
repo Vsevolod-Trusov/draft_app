@@ -6,18 +6,19 @@ import { Options } from "nodemailer/lib/smtp-transport";
 import { DEVELOP_MESSAGE, EMAIL_TITLE } from "core";
 import { IMailService } from "gateways";
 
+import { createTransport } from "nodemailer";
 import { MailData } from "./types";
 
 @Injectable()
 export class MailService implements IMailService {
   constructor(private readonly _mailerService: MailerService) {}
 
-  async setTransport(): Promise<void> {
+  async setDefaultTransport(): Promise<void> {
     const OAuth2 = google.auth.OAuth2;
     const oauth2Client = new OAuth2(
       process.env.GCP_CLIENT_ID,
       process.env.GCP_CLIENT_SECRET,
-      "https://developers.google.com/oauthplayground"
+      "http://localhost:3000/api/v1/auth/callback"
     );
 
     oauth2Client.setCredentials({
@@ -45,16 +46,70 @@ export class MailService implements IMailService {
       },
     };
 
-    this._mailerService.addTransporter("gmail", config);
+    this._mailerService.addTransporter("default", config);
   }
 
-  async send({ receiver }: MailData) {
-    await this.setTransport();
+  // async setGcpTransport(
+  //   mail: string,
+  //   access_token: string,
+  //   refresh_token
+  // ): Promise<void> {
+  //   console.log("GCP");
+  //   const oAuth2Client = new google.auth.OAuth2(
+  //     process.env.GCP_CLIENT_ID,
+  //     process.env.GCP_CLIENT_SECRET,
+  //     "http://localhost:3000/api/v1/auth/callback"
+  //   );
+
+  //   oAuth2Client.setCredentials({ refresh_token });
+
+  //   const config: Options = {
+  //     service: "gmail",
+  //     auth: {
+  //       type: "OAuth2",
+  //       user: mail,
+  //       clientId: process.env.GCP_CLIENT_ID,
+  //       clientSecret: process.env.GCP_CLIENT_SECRET,
+  //       // refreshToken: refresh_token,
+  //       // accessToken: access_token,
+  //     },
+  //   };
+
+  //   this._mailerService.addTransporter("lol", config);
+  // }
+
+  async setGcpTransport(
+    mail: string,
+    access_token: string,
+    refresh_token: string
+  ): Promise<void> {
+    let transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        type: "OAuth2",
+        user: mail,
+        accessToken: access_token,
+      },
+    });
+
+    this._mailerService.addTransporter("lol", transporter);
+  }
+
+  async send({ receiver, refresh_token, access_token, mail }: MailData) {
+    await new Promise((resolve) => {
+      resolve(
+        refresh_token
+          ? this.setGcpTransport(mail, access_token, refresh_token)
+          : this.setDefaultTransport()
+      );
+    });
 
     return this._mailerService.sendMail({
-      transporterName: "gmail",
+      transporterName: refresh_token ? "lol" : "default",
       to: receiver,
-      from: "sev4kz@gmail.com",
+      from: mail || process.env.GCP_CLIENT_EMAIL,
       subject: EMAIL_TITLE,
       text: DEVELOP_MESSAGE,
     });

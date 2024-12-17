@@ -1,16 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Inject, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 
-import { DependenciesNames, NodeEnv } from 'core/data';
-import { AbstractAuthService, ConfigServiceActions, DatabaseService } from 'gateways';
+import { DependenciesNames, NodeEnv } from "core/data";
+import {
+  AbstractJwtAuthService,
+  ConfigServiceActions,
+  DatabaseService,
+} from "gateways";
 
 @Injectable()
-export class AuthService implements AbstractAuthService {
+export class AuthService implements AbstractJwtAuthService {
   constructor(
     private readonly _dataService: DatabaseService,
     @Inject(DependenciesNames.ConfigServiceActions)
     private readonly _configService: ConfigServiceActions,
-    private readonly _jwtService: JwtService,
+    private readonly _jwtService: JwtService
   ) {}
 
   async getTokens(sub: number, role: string): Promise<string[]> {
@@ -23,7 +27,7 @@ export class AuthService implements AbstractAuthService {
         {
           secret: this._configService.get(NodeEnv.AccessSecret),
           expiresIn: this._configService.get(NodeEnv.AccessPeriod),
-        },
+        }
       ),
       this._jwtService.signAsync(
         {
@@ -33,7 +37,7 @@ export class AuthService implements AbstractAuthService {
         {
           secret: this._configService.get(NodeEnv.RefreshSecret),
           expiresIn: this._configService.get(NodeEnv.RefreshPeriod),
-        },
+        }
       ),
     ]);
 

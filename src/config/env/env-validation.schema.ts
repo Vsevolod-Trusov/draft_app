@@ -18,4 +18,5 @@ export const envFileValidationSchema = Joi.object({
   GCP_CLIENT_ID: Joi.string().required(),
   GCP_CLIENT_SECRET: Joi.string().required(),
   GCP_CLIENT_REFRESH_TOKEN: Joi.string().required(),
+  GCP_REDIRECT_URI: Joi.string().required(),
 });

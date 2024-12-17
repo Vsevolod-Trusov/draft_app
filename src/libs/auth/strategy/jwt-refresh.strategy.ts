@@ -1,25 +1,35 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
+import { Inject, Injectable } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
 
-import { UserPayload } from 'app';
-import { DependenciesNames, HeaderNames, JwtStrategyNames, NodeEnv } from 'core/data';
-import { checkIncomingPayload } from 'core/utils';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { UserPayload } from "app";
+import {
+  DependenciesNames,
+  HeaderNames,
+  JwtStrategyNames,
+  NodeEnv,
+} from "core/data";
+import { checkIncomingPayload } from "core/utils";
+import { FastifyReply, FastifyRequest } from "fastify";
 
-import { AbstractAuthService, ConfigServiceActions } from 'gateways';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { AbstractJwtAuthService, ConfigServiceActions } from "gateways";
+import { ExtractJwt, Strategy } from "passport-jwt";
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy, JwtStrategyNames.Refresh) {
+export class RefreshStrategy extends PassportStrategy(
+  Strategy,
+  JwtStrategyNames.Refresh
+) {
   private static _isCookieExtractorUsed: boolean;
 
   constructor(
-    private readonly _authService: AbstractAuthService,
+    private readonly _authService: AbstractJwtAuthService,
     @Inject(DependenciesNames.ConfigServiceActions)
-    private readonly _configService: ConfigServiceActions,
+    private readonly _configService: ConfigServiceActions
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromHeader(HeaderNames.RefreshHeader)]),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromHeader(HeaderNames.RefreshHeader),
+      ]),
       ignoreExpiration: false,
       secretOrKey: _configService.get(NodeEnv.RefreshSecret),
       passReqToCallback: true,
@@ -34,7 +44,11 @@ export class RefreshStrategy extends PassportStrategy(Strategy, JwtStrategyNames
     return refreshToken;
   }
 
-  async validate(request: FastifyRequest, reply: FastifyReply, incomingPayload: unknown): Promise<UserPayload> {
+  async validate(
+    request: FastifyRequest,
+    reply: FastifyReply,
+    incomingPayload: unknown
+  ): Promise<UserPayload> {
     const { sub, role }: UserPayload = checkIncomingPayload(incomingPayload);
     // const currentRefreshToken = await this.redisService.get(`${sub}`);
 
@@ -43,11 +57,11 @@ export class RefreshStrategy extends PassportStrategy(Strategy, JwtStrategyNames
     // }
 
     // const [access, refresh] = await this.authService.getTokens(sub, role);
-    const [access, refresh] = ['acc', 'refr'];
+    const [access, refresh] = ["acc", "refr"];
     // this.redisService.set(`${sub}`, refresh);
 
     if (RefreshStrategy._isCookieExtractorUsed) {
-      reply.setCookie('userRole', role, { httpOnly: true });
+      reply.setCookie("userRole", role, { httpOnly: true });
       RefreshStrategy._isCookieExtractorUsed = false;
     } else {
       reply.header(HeaderNames.Authorization, `Bearer ${access}`);
