@@ -1,20 +1,40 @@
-import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { MiddlewareConsumer, Module } from "@nestjs/common";
+import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 
-import { EnvConfigModule, options } from 'config';
-import { AuthModule, CombinedGuard, DatabaseModule } from 'libs';
+import { EnvConfigModule, options } from "config";
+import {
+  AuthModule,
+  CombinedGuard,
+  DatabaseModule,
+  WinstonLogginModule,
+} from "libs";
 
-import { ControllersModule } from './modules';
+import { AllExceptionsFilter, LoggerMiddleware } from "libs/middleware";
+import { ControllersModule } from "./modules";
 
 @Module({
-  imports: [EnvConfigModule.forRoot(options), AuthModule, DatabaseModule, ControllersModule],
+  imports: [
+    EnvConfigModule.forRoot(options),
+    AuthModule,
+    DatabaseModule,
+    ControllersModule,
+    WinstonLogginModule,
+  ],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
     {
       provide: APP_GUARD,
       useClass: CombinedGuard,
     },
   ],
 })
-class AppModule {}
+class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes("*");
+  }
+}
 
 export { AppModule };
