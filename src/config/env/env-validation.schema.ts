@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import * as Joi from "joi";
 
 export const envFileValidationSchema = Joi.object({
   BACKEND_PORT: Joi.number().required(),
@@ -14,4 +14,8 @@ export const envFileValidationSchema = Joi.object({
   MAIL_PORT: Joi.number().required(),
   MAIL_SECURITY_FLAG: Joi.string().required(),
   COOKIE_SECRET: Joi.string().required(),
+  GCP_CLIENT_EMAIL: Joi.string().required(),
+  GCP_CLIENT_ID: Joi.string().required(),
+  GCP_CLIENT_SECRET: Joi.string().required(),
+  GCP_CLIENT_REFRESH_TOKEN: Joi.string().required(),
 });
