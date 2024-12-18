@@ -1,5 +1,4 @@
 import { UnauthorizedException } from '@nestjs/common';
-
 import { UserPayload } from 'app';
 
 export const checkIncomingPayload = (incomingPayload: unknown): UserPayload => {

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { BaseRepository, DatabaseService } from 'gateways';
 
 import { DataService } from './data_service';

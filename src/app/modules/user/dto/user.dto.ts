@@ -1,5 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-
 import { UserEntity } from 'libs';
 
 class UserDto extends UserEntity {

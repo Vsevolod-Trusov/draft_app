@@ -3,8 +3,14 @@ enum Routes {
   UsersPrefix = 'users',
   MailPrefix = 'mail',
   Send = 'send',
-  ById = ':id',
   Swagger = 'swagger',
+  OAuthCallback = 'callback',
+  OAuth = 'oauth',
+  RootAuth = 'auth',
+
+  ById = ':id',
+
+  CodeQuery = 'code',
 }
 
 enum Params {

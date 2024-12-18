@@ -1,9 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-
 import { DependenciesNames } from 'core';
-import { AbstractAuthService } from 'gateways';
+import { AbstractJwtAuthService } from 'gateways';
 
 import { AuthService } from './auth.service';
 import { CustomAuthGuard, RoleGuard } from './guard';
@@ -18,7 +17,7 @@ import { AccessStrategy } from './strategy/jwt.strategy';
       useClass: ConfigService,
     },
     {
-      provide: AbstractAuthService,
+      provide: AbstractJwtAuthService,
       useClass: AuthService,
     },
     AccessStrategy,
@@ -26,6 +25,6 @@ import { AccessStrategy } from './strategy/jwt.strategy';
     CustomAuthGuard,
     RoleGuard,
   ],
-  exports: [CustomAuthGuard, RoleGuard, AccessStrategy, RefreshStrategy, AbstractAuthService],
+  exports: [CustomAuthGuard, RoleGuard, AccessStrategy, RefreshStrategy, AbstractJwtAuthService],
 })
 export class AuthModule {}

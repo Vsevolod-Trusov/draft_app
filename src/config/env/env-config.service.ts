@@ -1,11 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-
 import { isEnvsComeFromOutside } from 'core';
 import { DependenciesNames, EnvFiles, NodeEnv } from 'core/data';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
 import { ConfigServiceActions, EnvConfigFile, EnvConfigOptions } from 'gateways';
+import * as path from 'path';
 
 @Injectable()
 export class ConfigService implements ConfigServiceActions {

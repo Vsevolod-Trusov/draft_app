@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
 import { DependenciesNames } from 'core/data';
 
 import { ConfigService } from './env-config.service';

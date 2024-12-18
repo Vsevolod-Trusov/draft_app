@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { AbstractBaseUseCase } from 'gateways';
 
 import { UserController } from './controller/user.controller';

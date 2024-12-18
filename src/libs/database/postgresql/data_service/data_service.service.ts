@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { BaseRepository, DatabaseService } from 'gateways';
 
 import { UserEntity } from '../entities';

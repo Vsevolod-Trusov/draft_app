@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-
 import { Params, Public, Routes } from 'core';
 import { AbstractBaseUseCase } from 'gateways';
 

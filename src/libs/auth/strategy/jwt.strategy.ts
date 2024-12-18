@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-
 import { UserPayload } from 'app';
 import { DependenciesNames, JwtStrategyNames, NodeEnv } from 'core';
 import { checkIncomingPayload } from 'core/utils';
