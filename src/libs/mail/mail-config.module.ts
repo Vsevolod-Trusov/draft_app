@@ -11,21 +11,6 @@ import { MailService } from "./mail.service";
       useFactory: () => ({
         transport: "smtps://user@domain.com:pass@smtp.domain.com",
         preview: true,
-        // template: {
-        //   dir: path.join(process.cwd(), "templates/pages"),
-        //   adapter: new HandlebarsAdapter(),
-        //   options: {
-        //     strict: true,
-        //   },
-        // },
-        // options: {
-        //   partials: {
-        //     dir: path.join(process.cwd(), "templates/partials"),
-        //     options: {
-        //       strict: true,
-        //     },
-        //   },
-        // },
       }),
     }),
   ],

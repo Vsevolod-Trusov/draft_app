@@ -1,18 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { google } from "googleapis";
 
 import { AbstractAuthUseCase } from "gateways";
 
 @Injectable()
 export class AuthUseCase extends AbstractAuthUseCase {
-  private readonly _oAuth2Client;
-
-  constructor() {
+  constructor(private readonly _oAuth2Client) {
     super();
-    console.log(process.env.GCP_REDIRECT_URI);
-    this._oAuth2Client = new google.auth.OAuth2(
-      
-    );
   }
 
   async getTokens(code: string): Promise<any> {
@@ -21,10 +14,12 @@ export class AuthUseCase extends AbstractAuthUseCase {
   }
 
   getAuthUrl(): string {
-    return this._oAuth2Client.generateAuthUrl({
+    const oauthOptions = {
       access_type: "offline",
       scope: ["https://www.googleapis.com/auth/gmail.send"],
       prompt: "consent",
-    });
+    };
+
+    return this._oAuth2Client.generateAuthUrl(oauthOptions);
   }
 }

@@ -1,23 +1,23 @@
 import { Controller, Get, Query } from "@nestjs/common";
 
-import { Public } from "core";
+import { ExceptionMessage, Public, Routes } from "core";
 import { AbstractAuthUseCase } from "gateways";
 
-@Controller("auth")
+@Controller(Routes.RootAuth)
 @Public()
 export class AuthController {
   constructor(private readonly _authService: AbstractAuthUseCase) {}
 
-  @Get("oauth")
+  @Get(Routes.OAuth)
   oauth() {
     const url = this._authService.getAuthUrl();
     return { url };
   }
 
-  @Get("callback")
-  async callback(@Query("code") code: string) {
+  @Get(Routes.OAuthCallback)
+  async callback(@Query(Routes.CodeQuery) code: string) {
     if (!code) {
-      return { error: "Authorization code is missing" };
+      return { error: ExceptionMessage.OAuthCodeUndetected };
     }
     const tokens = await this._authService.getTokens(code);
     return tokens;

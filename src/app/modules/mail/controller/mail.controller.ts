@@ -12,14 +12,16 @@ export class MailController {
   @Get(Routes.Send)
   public sendMail(
     @Query("access") access_token?: string,
-    @Query("mail") mail?: string,
+    @Query("sender") mail?: string,
+    @Query("receiver") receiver?: string,
     @Query("refresh") refresh_token?: string
   ) {
     const mailData: MailData = {
-      receiver: "michail.shatilo@orangesoft.co",
+      receiver,
       access_token,
       mail,
       refresh_token,
+      transportType: "gcp",
     };
 
     return this.mailService.sendMail(mailData);

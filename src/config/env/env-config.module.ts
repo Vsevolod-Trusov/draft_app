@@ -1,9 +1,9 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 
-import { DependenciesNames } from 'core/data';
+import { DependenciesNames } from "core/data";
 
-import { ConfigService } from './env-config.service';
+import { ConfigService } from "./env-config.service";
 @Module({})
 export class EnvConfigModule {
   static forRoot(options): DynamicModule {
