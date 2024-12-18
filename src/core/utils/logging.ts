@@ -1,4 +1,4 @@
-import { FastifyRequest } from "fastify";
+import { FastifyRequest } from 'fastify';
 
 const getLoggingInfo = (request: FastifyRequest) => {
   return `

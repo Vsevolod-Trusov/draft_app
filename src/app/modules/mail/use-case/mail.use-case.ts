@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DependenciesNames } from 'core';
-
 import { AbstractMailUseCase, IMailService } from 'gateways';
 import { MailData } from 'libs';
 

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { AbstractMailUseCase } from 'gateways';
 import { MailConfigModule } from 'libs';
 

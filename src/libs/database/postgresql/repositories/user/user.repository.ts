@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { BaseRepository, DatabaseOptions } from 'gateways';
 import { UserEntity } from 'libs';
 

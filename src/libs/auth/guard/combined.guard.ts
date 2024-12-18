@@ -1,7 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-
 import { Reflector } from '@nestjs/core';
-
 import { IS_PUBLIC_KEY } from 'core';
 
 import { CustomAuthGuard } from './auth.guard';

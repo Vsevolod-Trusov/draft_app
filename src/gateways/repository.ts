@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 import { DatabaseOptions } from './database-filter.interface';
 
 abstract class BaseRepository<T> extends PrismaClient {

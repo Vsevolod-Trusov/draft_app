@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { AbstractBaseUseCase, BaseRepository, DatabaseOptions } from 'gateways';
 
 @Injectable()

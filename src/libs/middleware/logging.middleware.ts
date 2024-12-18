@@ -1,5 +1,4 @@
 import { Inject, Injectable, LoggerService, NestMiddleware } from '@nestjs/common';
-
 import { getLoggingInfo } from 'core';
 import { FastifyRequest } from 'fastify';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';

@@ -1,12 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-
 import { UserPayload } from 'app';
 import { DependenciesNames, HeaderNames, JwtStrategyNames, NodeEnv } from 'core/data';
 import { checkIncomingPayload } from 'core/utils';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { AbstractAuthService, ConfigServiceActions } from 'gateways';
+import { AbstractJwtAuthService, ConfigServiceActions } from 'gateways';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
@@ -14,7 +12,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, JwtStrategyNames
   private static _isCookieExtractorUsed: boolean;
 
   constructor(
-    private readonly _authService: AbstractAuthService,
+    private readonly _authService: AbstractJwtAuthService,
     @Inject(DependenciesNames.ConfigServiceActions)
     private readonly _configService: ConfigServiceActions,
   ) {
