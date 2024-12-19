@@ -5,7 +5,7 @@ interface MailBody {
   receiver: Array<string>;
   subject?: string;
   message: string;
-  transportType?: string;
+  transportType: string;
 }
 
 export { MailBody };

@@ -14,7 +14,7 @@ export class MailController {
   @Post(Routes.Send)
   public async sendMail(@Body() { transportType, ...mailData }: MailBody, @Response() response: FastifyReply) {
     const mailResult = await this.mailService.sendMail({
-      transportType: (transportType || 'gcp') as TransportType,
+      transportType: transportType as TransportType,
       ...mailData,
     });
 

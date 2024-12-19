@@ -1,4 +1,4 @@
-type TransportType = 'ms' | 'gcp';
+type TransportType = 'ms' | 'gcp' | 'bot';
 
 interface MailData {
   receiver: Array<string>;
@@ -6,8 +6,10 @@ interface MailData {
   refresh_token: string;
   access_token: string;
   message: string;
-  transportType?: TransportType;
+  transportType: TransportType;
   subject?: string;
 }
 
-export { MailData, TransportType };
+interface BotMailData extends Omit<MailData, 'access_token' | 'refresh_token'> {}
+
+export { BotMailData, MailData, TransportType };
