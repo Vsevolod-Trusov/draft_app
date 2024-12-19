@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { DEVELOP_MESSAGE, EMAIL_TITLE } from 'core';
-import { IMailService } from 'gateways';
+import { Injectable } from '@nestjs/common';
+
 import { google } from 'googleapis';
-import { Options } from 'nodemailer/lib/smtp-transport';
+import { GaxiosPromise } from 'googleapis/build/src/apis/abusiveexperiencereport';
+
+import { buildGcpMessage, SchemaMessage, SmtpMessage } from 'core';
+import { IMailService } from 'gateways';
 
 import { MailData } from './types';
 
@@ -11,71 +13,34 @@ import { MailData } from './types';
 export class MailService implements IMailService {
   constructor(private readonly _mailerService: MailerService) {}
 
-  setSesTransport(mailData: MailData): void {
-    throw new Error('Method not implemented.');
-  }
-
-  async setGcpTransport(mailData: MailData): Promise<void> {
+  sendGcpMail({ refresh_token, access_token, subject, ...mailData }: MailData): GaxiosPromise<SchemaMessage> {
     const OAuth2 = google.auth.OAuth2;
-    const oauth2Client = new OAuth2(
-      process.env.GCP_CLIENT_ID,
-      process.env.GCP_CLIENT_SECRET,
-      process.env.GCP_REDIRECT_URI,
-    );
-
-    oauth2Client.setCredentials({
-      refresh_token: process.env.GCP_CLIENT_REFRESH_TOKEN,
-    });
-
-    const accessToken: string = await new Promise((resolve, reject) => {
-      oauth2Client.getAccessToken((exception, token) => {
-        if (exception) {
-          reject(exception.message);
-        }
-
-        resolve(token);
-      });
-    });
-
-    const config: Options = {
-      service: 'gmail',
-      auth: {
-        type: 'OAuth2',
-        user: process.env.GCP_CLIENT_EMAIL,
-        clientId: process.env.GCP_CLIENT_ID,
-        clientSecret: process.env.GCP_CLIENT_SECRET,
-        accessToken,
+    const oauth2Client = new OAuth2({
+      clientId: process.env.GCP_CLIENT_ID,
+      clientSecret: process.env.GCP_CLIENT_SECRET,
+      redirectUri: process.env.GCP_REDIRECT_URI,
+      credentials: {
+        access_token,
+        refresh_token,
       },
+    });
+    const gmailProvider = google.gmail({ version: 'v1', auth: oauth2Client });
+    const { sender, receiver, message } = mailData;
+    const buildData: SmtpMessage = {
+      from: sender,
+      to: receiver,
+      subject: subject,
+      message: message,
     };
+    const messageMetadata = buildGcpMessage(buildData);
 
-    this._mailerService.addTransporter('gcp', config);
+    return gmailProvider.users.messages.send({
+      userId: sender,
+      requestBody: messageMetadata,
+    });
   }
 
-  async send({ receiver, refresh_token, access_token, mail, transportType }: MailData) {
-    await new Promise(resolve => {
-      resolve(
-        transportType === 'gcp'
-          ? this.setGcpTransport({
-              mail,
-              access_token,
-              refresh_token,
-              receiver,
-            })
-          : this.setSesTransport({
-              mail,
-              access_token,
-              refresh_token,
-              receiver,
-            }),
-      );
-    });
-
-    return this._mailerService.sendMail({
-      from: `Information mail | <${mail}>`,
-      transporterName: transportType,
-      to: receiver,
-      subject: EMAIL_TITLE,
-      text: DEVELOP_MESSAGE,
-    });
+  sendMSMail(mailData: MailData) {
+    throw new Error('Method not implemented.');
   }
 }

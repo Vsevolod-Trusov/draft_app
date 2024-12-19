@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { DependenciesNames } from 'core';
 import { AbstractMailUseCase, IMailService } from 'gateways';
 import { MailData } from 'libs';
@@ -13,6 +14,6 @@ export class MailUseCase extends AbstractMailUseCase {
   }
 
   sendMail(mail: MailData) {
-    return this.mailService.send(mail);
+    return this.mailService.sendGcpMail(mail);
   }
 }

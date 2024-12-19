@@ -1,11 +1,13 @@
-type TransportType = 'ses' | 'gcp';
+type TransportType = 'ms' | 'gcp';
 
 interface MailData {
-  receiver: string;
-  mail: string;
-  refresh_token?: string;
-  access_token?: string;
+  receiver: Array<string>;
+  sender: string;
+  refresh_token: string;
+  access_token: string;
+  message: string;
   transportType?: TransportType;
+  subject?: string;
 }
 
 export { MailData, TransportType };

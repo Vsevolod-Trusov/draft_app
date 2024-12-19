@@ -1,29 +1,23 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Response } from '@nestjs/common';
 import { Public, Routes } from 'core';
+import { FastifyReply } from 'fastify';
 import { AbstractMailUseCase } from 'gateways';
-import { MailData, TransportType } from 'libs';
+import { TransportType } from 'libs';
+
+import { MailBody } from '../dto';
 
 @Public()
 @Controller(Routes.MailPrefix)
 export class MailController {
   constructor(private readonly mailService: AbstractMailUseCase) {}
 
-  @Get(Routes.Send)
-  public sendMail(
-    @Query('access') access_token?: string,
-    @Query('sender') mail?: string,
-    @Query('receiver') receiver?: string,
-    @Query('refresh') refresh_token?: string,
-    @Query('type') transportType?: TransportType,
-  ) {
-    const mailData: MailData = {
-      receiver,
-      access_token,
-      mail,
-      refresh_token,
-      transportType: transportType || 'gcp',
-    };
+  @Post(Routes.Send)
+  public async sendMail(@Body() { transportType, ...mailData }: MailBody, @Response() response: FastifyReply) {
+    const mailResult = await this.mailService.sendMail({
+      transportType: (transportType || 'gcp') as TransportType,
+      ...mailData,
+    });
 
-    return this.mailService.sendMail(mailData);
+    return response.status(HttpStatus.OK).send(mailResult);
   }
 }

@@ -1,3 +1,4 @@
+export * from './buildGcpMessage';
 export * from './checkJwtPayload';
 export * from './getSwaggerConfig';
 export * from './isEnvsComeFromOutside';

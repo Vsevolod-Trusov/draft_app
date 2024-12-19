@@ -19,6 +19,8 @@ export class AllExceptionsFilter {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
 
+    response.code(HttpStatus.INTERNAL_SERVER_ERROR);
+
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const data = getErrorData(request, exception);
@@ -29,15 +31,17 @@ export class AllExceptionsFilter {
     } else if (exception instanceof PrismaClientKnownRequestError) {
       this.logger.error(`DATABASE EXCEPTION ${exception}`, AllExceptionsFilter.name);
 
-      response.code(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: exception.message });
+      response.send({ message: exception.message });
     } else if (exception instanceof PrismaClientUnknownRequestError) {
       this.logger.error(`PRISMA UNKNOWN REQUEST EXCEPTION: ${exception.message}`, AllExceptionsFilter.name);
 
-      response.code(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: exception.message });
+      response.send({ message: exception.message });
     } else if (exception instanceof PrismaClientRustPanicError) {
       this.logger.error(`PRISMA RUST PANIC EXCEPTION: ${exception.message}`, AllExceptionsFilter.name);
 
-      response.code(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: exception.message });
+      response.send({ message: exception.message });
     }
+
+    response.send({ message: exception.message });
   }
 }

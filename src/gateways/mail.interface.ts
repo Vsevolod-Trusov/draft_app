@@ -1,9 +1,8 @@
 import { MailData } from 'libs';
 
 interface IMailService {
-  send(mailData: MailData);
-  setSesTransport(mailData: MailData): void;
-  setGcpTransport(mailData: MailData): Promise<void>;
+  sendGcpMail(mailData: MailData);
+  sendMSMail(mailData: MailData);
 }
 
 export { IMailService };
