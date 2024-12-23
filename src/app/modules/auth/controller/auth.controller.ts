@@ -1,9 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ExceptionMessage, Public, Routes } from 'core';
-import { AbstractAuthUseCase } from 'gateways';
 
-@Controller(Routes.RootAuth)
+import { ExceptionMessage, Routes } from 'core';
+import { AbstractAuthUseCase } from 'gateways';
+import { Public } from 'libs';
+
 @Public()
+@Controller(Routes.RootAuth)
 export class AuthController {
   constructor(private readonly _authService: AbstractAuthUseCase) {}
 
@@ -18,7 +20,9 @@ export class AuthController {
     if (!code) {
       return { error: ExceptionMessage.OAuthCodeUndetected };
     }
+
     const tokens = await this._authService.getTokens(code);
+
     return tokens;
   }
 }

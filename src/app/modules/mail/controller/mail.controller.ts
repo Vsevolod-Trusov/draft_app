@@ -1,8 +1,9 @@
 import { Body, Controller, HttpStatus, Post, Response } from '@nestjs/common';
-import { Public, Routes } from 'core';
 import { FastifyReply } from 'fastify';
+
+import { Routes } from 'core';
 import { AbstractMailUseCase } from 'gateways';
-import { TransportType } from 'libs';
+import { Public, TransportType } from 'libs';
 
 import { MailBody } from '../dto';
 

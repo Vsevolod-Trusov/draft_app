@@ -5,8 +5,9 @@ import {
   PrismaClientRustPanicError,
   PrismaClientUnknownRequestError,
 } from '@prisma/client/runtime/library';
-import { getErrorData } from 'core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+
+import { extractHttpExceptionMessage, NodeEnv } from 'core';
 
 @Catch()
 export class AllExceptionsFilter {
@@ -16,32 +17,34 @@ export class AllExceptionsFilter {
   ) {}
 
   catch(exception: any, context: ExecutionContext): void {
-    const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
-
     response.code(HttpStatus.INTERNAL_SERVER_ERROR);
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
-      const data = getErrorData(request, exception);
+      const messages: string | object = exception.getResponse();
+      const data = extractHttpExceptionMessage(messages);
 
-      this.logger.error(`INPUT: ${data};`, AllExceptionsFilter.name);
+      this.logger.error(data, AllExceptionsFilter.name);
 
-      response.code(status).send({ message: exception.message });
+      return response.code(status).send({
+        message:
+          process.env.NODE_ENV === NodeEnv.Develop || process.env.NODE_ENV === NodeEnv.Local ? data : exception.message,
+      });
     } else if (exception instanceof PrismaClientKnownRequestError) {
-      this.logger.error(`DATABASE EXCEPTION ${exception}`, AllExceptionsFilter.name);
+      this.logger.error(`[DATABASE EXCEPTION]: ${exception}`, AllExceptionsFilter.name);
 
-      response.send({ message: exception.message });
+      return response.send({ message: exception.message });
     } else if (exception instanceof PrismaClientUnknownRequestError) {
-      this.logger.error(`PRISMA UNKNOWN REQUEST EXCEPTION: ${exception.message}`, AllExceptionsFilter.name);
+      this.logger.error(`[PRISMA UNKNOWN REQUEST EXCEPTION]: ${exception.message}`, AllExceptionsFilter.name);
 
-      response.send({ message: exception.message });
+      return response.send({ message: exception.message });
     } else if (exception instanceof PrismaClientRustPanicError) {
-      this.logger.error(`PRISMA RUST PANIC EXCEPTION: ${exception.message}`, AllExceptionsFilter.name);
+      this.logger.error(`[PRISMA RUST PANIC EXCEPTION]: ${exception.message}`, AllExceptionsFilter.name);
 
-      response.send({ message: exception.message });
+      return response.send({ message: exception.message });
     }
 
-    response.send({ message: exception.message });
+    return response.send({ message: exception.message });
   }
 }

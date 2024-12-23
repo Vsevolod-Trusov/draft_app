@@ -1,4 +1,5 @@
 import fastifyCookie, { FastifyCookieOptions } from '@fastify/cookie';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule } from '@nestjs/swagger';
@@ -43,6 +44,14 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   await app.listen(PORT, ADDRESS, () => {
     printWelcome(STAGE, ADDRESS, PORT);

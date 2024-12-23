@@ -1,5 +1,7 @@
 import { FastifyRequest } from 'fastify';
 
+import { ClassValidatorResponseException } from 'core';
+
 const getLoggingInfo = (request: FastifyRequest) => {
   return `
   Protocol: ${request.protocol} |
@@ -11,9 +13,20 @@ const getLoggingInfo = (request: FastifyRequest) => {
   TimeStamp: ${new Date(Date.now()).toUTCString()}\n`;
 };
 
-const getErrorData = (request: FastifyRequest, exception: Error) => {
-  const log = getLoggingInfo(request);
-  return log + `[ERROR]: ${exception.message || exception} |`;
+const extractHttpExceptionMessage = (exception: ClassValidatorResponseException | string | object) => {
+  if (typeof exception === 'string') return exception;
+
+  if (typeof exception === 'object' && typeof exception['message'] === 'string') {
+    return exception['message'];
+  }
+
+  if (typeof exception === 'object' && typeof exception['message'] === 'object') {
+    const message = exception['message'].map(exceptionItem => exceptionItem).join(' | ');
+
+    return message;
+  }
+
+  return JSON.stringify(exception);
 };
 
-export { getErrorData, getLoggingInfo };
+export { extractHttpExceptionMessage, getLoggingInfo };
