@@ -1,8 +1,16 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+
 import { EnvConfigModule, options } from 'config';
-import { AuthModule, CombinedGuard, DatabaseModule, WebsocketsModule, WinstonLogginModule } from 'libs';
-import { AllExceptionsFilter, LoggerMiddleware } from 'libs/middleware';
+import {
+  AllExceptionsFilter,
+  AuthModule,
+  CombinedGuard,
+  DatabaseModule,
+  LoggerMiddleware,
+  WebsocketsModule,
+  WinstonLogginModule,
+} from 'libs';
 
 import { ControllersModule } from './modules';
 
