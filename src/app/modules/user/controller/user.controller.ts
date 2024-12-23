@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Params, Public, Routes } from 'core';
-import { AbstractBaseUseCase } from 'gateways';
 
-import { PartialUserDto, UserDto } from '../dto/user.dto';
+import { Params, QueryOptions, Routes } from 'core';
+import { AbstractBaseUseCase } from 'gateways';
+import { Public } from 'libs';
+
+import { PartialUserDto, UserDto } from '../dto';
 
 @ApiTags('Users')
 @Public()
@@ -16,14 +18,11 @@ export class UserController {
     return this._userService.createOne(user);
   }
 
-  @Get('/fail')
-  fail() {
-    process.exit(-1);
-    throw new Error('server failed');
-  }
-
   @Get()
-  getAll() {
+  getAll(
+    @Query()
+    options: QueryOptions,
+  ) {
     return this._userService.getAll();
   }
 
