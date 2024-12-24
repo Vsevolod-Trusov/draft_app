@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DependenciesNames, EnvFiles, isEnvsComeFromOutside, NodeEnv } from 'core';
+import { DependenciesNames, EnvFiles, NodeEnv } from 'core';
 import { ConfigServiceActions, EnvConfigFile, EnvConfigOptions } from 'gateways';
 
 @Injectable()
@@ -40,10 +40,6 @@ export class ConfigService implements ConfigServiceActions {
 
     fs.readFile(envFile, (exception, data) => {
       if (exception) {
-        if (isEnvsComeFromOutside()) {
-          return;
-        }
-
         throw new InternalServerErrorException(exception.message);
       }
 

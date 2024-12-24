@@ -1,4 +1,3 @@
-import fastifyCookie, { FastifyCookieOptions } from '@fastify/cookie';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -25,12 +24,6 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(isDevelop ? { logger: true } : {}),
   );
-
-  const cookiePlugin = fastifyCookie as unknown as any;
-
-  app.register(cookiePlugin, {
-    secret: process.env.COOKIE_SECRET,
-  } as FastifyCookieOptions);
 
   app.setGlobalPrefix(Routes.ApiV1);
 
