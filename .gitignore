@@ -9,6 +9,7 @@ lint-staged.config.js
 .test.env
 .production.env
 .local.env
+.mvp.env
 
 # compiled output
 /dist

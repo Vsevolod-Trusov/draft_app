@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  zumi-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zumi-backend
+    networks:
+      - api_backend_database
+    ports:
+      - '${BACKEND_PORT}:${BACKEND_PORT}'
+    depends_on:
+      - postgres
+    env_file:
+      - .${NODE_ENV}.env
+    command: ['pnpm', 'pm2:start']
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    env_file:
+      - .${NODE_ENV}.env
+    networks:
+      - api_backend_database
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  api_backend_database:
+    driver: bridge
+    name: api_backend_database

@@ -1,0 +1,1 @@
+docker exec -it a9d7a105857885e760f1ca1e96c4ab2a6eb6934e114d636c9580aa19a8f90c22 bash - connect to the docker container

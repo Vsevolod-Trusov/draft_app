@@ -1,10 +1,10 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { isEnvsComeFromOutside } from 'core';
-import { DependenciesNames, EnvFiles, NodeEnv } from 'core/data';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
-import { ConfigServiceActions, EnvConfigFile, EnvConfigOptions } from 'gateways';
 import * as path from 'path';
+
+import { DependenciesNames, EnvFiles, isEnvsComeFromOutside, NodeEnv } from 'core';
+import { ConfigServiceActions, EnvConfigFile, EnvConfigOptions } from 'gateways';
 
 @Injectable()
 export class ConfigService implements ConfigServiceActions {
@@ -26,16 +26,12 @@ export class ConfigService implements ConfigServiceActions {
         filePath = EnvFiles.Production;
         break;
       }
-      case NodeEnv.Testing: {
-        filePath = EnvFiles.Testing;
-        break;
-      }
       case NodeEnv.Local: {
         filePath = EnvFiles.Local;
         break;
       }
       default: {
-        filePath = EnvFiles.Stage;
+        filePath = EnvFiles.Mvp;
         break;
       }
     }

@@ -23,8 +23,7 @@ enum NodeEnv {
 enum EnvFiles {
   Develop = '.develop.env',
   Local = '.local.env',
-  Stage = '.stage.env',
-  Testing = '.test.env',
+  Mvp = '.mvp.env',
   Production = '.production.env',
 }
 
