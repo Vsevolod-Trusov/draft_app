@@ -20,6 +20,7 @@ const ADDRESS = process.env.BACKEND_ADDRESS ?? DEFAULT_ADDRESS;
 const isDevelop = process?.env.NODE_ENV === NodeEnv.Develop || process?.env.NODE_ENV === NodeEnv.Local;
 
 async function bootstrap() {
+  console.log('asdasd');
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(isDevelop ? { logger: true } : {}),
