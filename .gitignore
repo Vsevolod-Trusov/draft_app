@@ -1,5 +1,6 @@
 # static analyzers
 *.eslintrc.js
+eslint.config.js
 *.prettierignore
 *.prettierrc
 lint-staged.config.js
