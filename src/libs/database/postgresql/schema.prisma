@@ -7,18 +7,140 @@ datasource db {
   url      = env("DATABASE_CONNECTION_STRING")
 }
 
+enum LeadStatus {
+  hot
+  feedback
+  inprogress
+  created
+}
+
+enum DocumentCategory {
+  recording
+  docs
+  pdf
+  presentation
+}
+
+enum EventStatus {
+  init
+  inprocess
+  finished
+}
+
 model User {
   id                     Int            @id @default(autoincrement())
   email                  String         @unique
   linkedinLink           String         @unique
   password               String
-  roleName               String // FK
+  roleName               String
+  role                   Role?          @relation(fields: [roleName], references: [name], onDelete: NoAction, onUpdate: Cascade)
   profileAvatar          String
   temporalExhibitionLink String
   profileIsActivated     Boolean        @default(false)
   followers              Int
   lastEntry              DateTime?
+ 
   createdAt              DateTime       @default(now())
   updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime? // soft delete
+  deletedAt              DateTime?     
+
+  teams                  UserTeam[]   
+  leads                  Lead[]
+  notes                  Note[]
+  events                 Event[]
+}
+
+model Role {
+  name        String               @id
+  users        User[]
+}
+
+model Team {
+  id String @id @default(uuid())
+  members UserTeam[] @relation()
+}
+
+model UserTeam {
+  userId Int
+  teamId String
+  isTeamLead Boolean @default(false)
+  user    User @relation(fields: [userId], references: [id])
+  team    Team @relation(fields: [teamId], references: [id])
+
+  @@id([userId, teamId])
+}
+
+model Lead {
+  id String @id @default(uuid())
+  userId Int
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  priority LeadStatus @default(created)
+  opened Int
+  clicked Int
+  landingPageVisited Int
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?     
+}
+
+
+model Address {
+  id String @id @default(uuid())
+  country String
+  city String
+  venue String
+  venueAddress String
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?    
+
+  event Event[]
+}
+
+model Note {
+  id String @id @default(uuid())
+  descripiton String 
+  authorId Int
+  author User @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?     
+}
+
+model Document {
+  id String @id @default(uuid())
+  data Bytes
+  link String?
+  documentType DocumentCategory @default(pdf)
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?     
+
+  event Event[]
+}
+
+model Event {
+  id String @id @default(uuid())
+  title String
+  memberId Int 
+  member User @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status EventStatus @default(init)
+  orginiser String 
+  startDate DateTime 
+  finishDate DateTime
+  websiteLink String
+  addressId String?
+  address Address? @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  documentId String?
+  document Document? @relation(fields: [documentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  attendesList Bytes?
+  isOnlineFormat Boolean @default(true)
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?     
 }
