@@ -1,9 +1,9 @@
-import { UserEntity } from 'libs';
+import { User } from '@prisma/client';
 
 import { BaseRepository } from './repository';
 
 abstract class DatabaseService {
-  public userRepository: BaseRepository<UserEntity>;
+  public userRepository: BaseRepository<User>;
 }
 
 export { DatabaseService };

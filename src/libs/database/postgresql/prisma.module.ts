@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { User } from '@prisma/client';
+
 import { BaseRepository, DatabaseService } from 'gateways';
 
 import { DataService } from './data_service';
-import { UserEntity } from './entities';
 import { PrismaService } from './prisma.service';
 import { UserRepository } from './repositories';
 
@@ -10,7 +11,7 @@ import { UserRepository } from './repositories';
   providers: [
     PrismaService,
     {
-      provide: BaseRepository<UserEntity>,
+      provide: BaseRepository<User>,
       useClass: UserRepository,
     },
     {

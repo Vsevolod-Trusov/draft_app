@@ -1,15 +1,14 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { UserEntity } from 'libs';
+import { User } from '@prisma/client';
 
-class UserDto extends UserEntity {
+interface UserDto extends User {
   payload: Record<string, unknown>;
 }
 
-class UserPayload {
+interface UserPayload {
   sub: number;
   role: string;
 }
 
-class PartialUserDto extends PartialType(UserDto) {}
+type PartialUserDto = Partial<UserDto>;
 
 export { PartialUserDto, UserDto, UserPayload };

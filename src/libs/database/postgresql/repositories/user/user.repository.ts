@@ -1,34 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
+
 import { BaseRepository, DatabaseOptions } from 'gateways';
-import { UserEntity } from 'libs';
 
 import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class UserRepository extends BaseRepository<UserEntity> {
+export class UserRepository extends BaseRepository<User> {
   constructor(private readonly prismaService: PrismaService) {
     super();
   }
 
-  findAll(options: DatabaseOptions<UserEntity> = {}): Promise<UserEntity[]> {
+  findAll(options: DatabaseOptions<User> = {}): Promise<User[]> {
     return this.prismaService.user.findMany({
       where: options.filter,
     });
   }
 
-  findOne(options: DatabaseOptions<UserEntity>): Promise<UserEntity> {
+  findOne(options: DatabaseOptions<User>): Promise<User> {
     return this.prismaService.user.findFirst({
       where: options.filter,
     });
   }
 
-  createOne(creatingEntity: UserEntity): Promise<UserEntity> {
+  createOne(creatingEntity: User): Promise<User> {
     return this.prismaService.user.create({
       data: creatingEntity,
     });
   }
 
-  async createMany(creatingEntities: UserEntity[]): Promise<UserEntity[]> {
+  async createMany(creatingEntities: User[]): Promise<User[]> {
     const { count } = await this.prismaService.user.createMany({
       data: creatingEntities,
     });
@@ -36,7 +37,7 @@ export class UserRepository extends BaseRepository<UserEntity> {
     return count === creatingEntities.length ? creatingEntities : [];
   }
 
-  updateOne(options: DatabaseOptions<UserEntity>, updateEntity: UserEntity): Promise<UserEntity> {
+  updateOne(options: DatabaseOptions<User>, updateEntity: User): Promise<User> {
     return this.prismaService.user.update({
       where: {
         id: options.filter?.id,
@@ -45,7 +46,7 @@ export class UserRepository extends BaseRepository<UserEntity> {
     });
   }
 
-  async updateMany(options: DatabaseOptions<UserEntity>, updateEntities: UserEntity[]): Promise<UserEntity[]> {
+  async updateMany(options: DatabaseOptions<User>, updateEntities: User[]): Promise<User[]> {
     const { count } = await this.prismaService.user.updateMany({
       where: {
         id: options.filter?.id,
@@ -56,7 +57,7 @@ export class UserRepository extends BaseRepository<UserEntity> {
     return count === updateEntities.length ? updateEntities : [];
   }
 
-  remove(options: DatabaseOptions<UserEntity>): Promise<UserEntity> {
+  remove(options: DatabaseOptions<User>): Promise<User> {
     return this.prismaService.user.delete({ where: { id: options.filter?.id } });
   }
 }
