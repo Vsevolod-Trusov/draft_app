@@ -10,6 +10,8 @@
     "prepare": "husky",
     "start:local": "dotenv -e ./.local.env -- cross-env NODE_ENV=local nest start --watch --trace-warnings",
     "prisma:local_build_schema": "dotenv -e ./.local.env -- cross-env NODE_ENV=local pnpm exec prisma migrate dev --name init --schema ./src/libs/database/postgresql/schema.prisma",
+    "prisma:format": "pnpm exec prisma format --schema ./src/libs/database/postgresql/schema.prisma",
+    "prisma:local_seed": "dotenv -e ./.local.env -- cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./src/libs/database/postgresql/seed.ts",
     "start:node": "dotenv -e ./.local.env -- cross-env NODE_ENV=local node dist/main.js --trace-warnings",
     "pm2:local": "cross-env NODE_ENV=local pm2 start ecosystem.config.js --env local --no-daemon",
     "prisma:generate_client": "pnpm exec prisma generate --schema ./src/libs/database/postgresql/schema.prisma",

@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "noteId" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "roleName" DROP NOT NULL,
+ALTER COLUMN "addressId" DROP NOT NULL,
+ALTER COLUMN "companyName" DROP NOT NULL;

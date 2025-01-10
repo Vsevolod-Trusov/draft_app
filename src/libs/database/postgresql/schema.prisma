@@ -19,6 +19,7 @@ enum DocumentCategory {
   docs
   pdf
   presentation
+  csv
 }
 
 enum EventStatus {
@@ -27,120 +28,241 @@ enum EventStatus {
   finished
 }
 
-model User {
-  id                     Int            @id @default(autoincrement())
-  email                  String         @unique
-  linkedinLink           String         @unique
-  password               String
-  roleName               String
-  role                   Role?          @relation(fields: [roleName], references: [name], onDelete: NoAction, onUpdate: Cascade)
-  profileAvatar          String
-  temporalExhibitionLink String
-  profileIsActivated     Boolean        @default(false)
-  followers              Int
-  lastEntry              DateTime?
- 
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?     
+enum TeamStatus {
+  active
+  inactive
+}
 
-  teams                  UserTeam[]   
-  leads                  Lead[]
-  notes                  Note[]
-  events                 Event[]
+enum InsightCategory {
+  activities
+  notes
+  recent_event
+}
+
+// USERS TEAMS ACCORDING TO DATABASE SCHEMA
+model User {
+  id                 Int           @id @default(autoincrement())
+  email              String        @unique
+  billingEmail       String?       @unique
+  password           String
+  roleName           String?
+  role               Role?         @relation(fields: [roleName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+  firstname          String
+  lastname           String
+  billingFullname    String?
+  addressId          String?
+  address            Address?      @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  jobName            String?
+  job                Job?          @relation(fields: [jobName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+  companyName        String?
+  company            Company?      @relation(fields: [companyName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+  photoLink          String?
+  phoneNumber        String?
+  vatNumber          String?
+  otherInfo          String?
+  linkedinLink       String        @unique
+  calendlyLink       String        @unique
+  profileIsActivated Boolean       @default(false)
+  events             EventToUser[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  teams UserToTeam[]
+  notes Note[]
+  chats Chat[]
+}
+
+model Job {
+  name String @unique
+
+  users User[]
+}
+
+model Company {
+  name String @unique
+
+  users User[]
 }
 
 model Role {
-  name        String               @id
-  users        User[]
+  name  String @id
+  users User[]
 }
 
 model Team {
-  id String @id @default(uuid())
-  members UserTeam[] @relation()
+  id      String       @id @default(uuid())
+  name    String
+  status  TeamStatus
+  members UserToTeam[]
 }
 
-model UserTeam {
-  userId Int
-  teamId String
+model UserToTeam {
+  userId     Int
+  teamId     String
   isTeamLead Boolean @default(false)
-  user    User @relation(fields: [userId], references: [id])
-  team    Team @relation(fields: [teamId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
+  team       Team    @relation(fields: [teamId], references: [id])
 
   @@id([userId, teamId])
 }
 
-model Lead {
-  id String @id @default(uuid())
-  userId Int
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  priority LeadStatus @default(created)
-  opened Int
-  clicked Int
-  landingPageVisited Int
-
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?     
-}
-
-
 model Address {
-  id String @id @default(uuid())
-  country String
-  city String
-  venue String
+  id           String  @id @default(uuid())
+  country      String
+  city         String
+  venue        String
   venueAddress String
+  street       String?
+  number       Int?
 
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?    
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   event Event[]
+  users User[]
 }
 
 model Note {
-  id String @id @default(uuid())
-  descripiton String 
-  authorId Int
-  author User @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  id          String @id @default(uuid())
+  descripiton String
+  authorId    Int
+  author      User   @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events Event[]
+}
+
+// LEADS HUB
+model Lead {
+  id                 Int               @id @default(autoincrement())
+  firstname          String
+  lastname           String
+  jobName            String
+  companyName        String
+  countryName        String
+  email              String            @unique
+  phoneNumber        String?
+  status             LeadStatus        @default(created)
+  isDraft            Boolean           @default(false)
+  meetingSummaryLink String?
+  insights           InsightsOnLeads[]
+
+  opened             Int?
+  clicked            Int?
+  landingPageVisited Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Insight {
+  id          Int               @id @default(autoincrement())
+  title       String
+  Description String
+  type        InsightCategory
+  leads       InsightsOnLeads[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InsightsOnLeads {
+  leadId    Int
+  lead      Lead    @relation(fields: [leadId], references: [id])
+  insightId Int
+  insight   Insight @relation(fields: [insightId], references: [id])
+
+  @@id([leadId, insightId])
+}
+
+// EVENTS
+model Event {
+  id               Int           @id @default(autoincrement())
+  title            String
+  companyLogoLink  String?
+  status           EventStatus   @default(init)
+  orginizer        String
+  startDate        DateTime
+  finishDate       DateTime
+  websiteLink      String?
+  addressId        String?
+  address          Address?      @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  documentId       String?
+  document         Document?     @relation(fields: [documentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  attendesListLink String?
+  noteId           String?
+  note             Note?         @relation(fields: [noteId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  users            EventToUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EventToUser {
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id])
+
+  @@id([userId, eventId])
 }
 
 model Document {
-  id String @id @default(uuid())
-  data Bytes
-  link String?
+  id           String           @id @default(uuid())
+  data         Bytes?
+  link         String
   documentType DocumentCategory @default(pdf)
 
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  event Event[]
+  events   Event[]
+  messages Message[]
 }
 
-model Event {
-  id String @id @default(uuid())
-  title String
-  memberId Int 
-  member User @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  status EventStatus @default(init)
-  orginiser String 
-  startDate DateTime 
-  finishDate DateTime
-  websiteLink String
-  addressId String?
-  address Address? @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+// CHATS
+model Chat {
+  id        String   @id @default(uuid())
+  title     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+
+  messages Message[]
+}
+
+model Message {
+  id         String    @id @default(uuid())
+  message    String
+  chatId     String
+  chat       Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   documentId String?
-  document Document? @relation(fields: [documentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  attendesList Bytes?
-  isOnlineFormat Boolean @default(true)
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  deletedAt              DateTime?     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+// SQL CLEAR TABLES
+// TRUNCATE TABLE  
+//               "draft_app"."Event",
+//               "draft_app"."EventToUser",
+//               "draft_app"."Insight", 
+//               "draft_app"."InsightsOnLeads", 
+//               "draft_app"."Job", 
+//               "draft_app"."Lead",
+//               "draft_app"."Message",
+//               "draft_app"."Note",
+//               "draft_app"."Role",
+//               "draft_app"."Team",
+//               "draft_app"."User",
+//               "draft_app"."UserToTeam",
+//               "draft_app"."Address",
+//               "draft_app"."Chat", 
+//               "draft_app"."Company", 
+//               "draft_app"."Document"
+// RESTART IDENTITY CASCADE;
