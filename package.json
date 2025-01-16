@@ -39,6 +39,7 @@
     "dotenv-cli": "^7.4.4",
     "fastify": "^5.1.0",
     "googleapis": "^144.0.0",
+    "hubspot": "^2.3.14",
     "joi": "^17.13.3",
     "nest-winston": "^1.9.7",
     "nodemailer": "^6.9.16",
