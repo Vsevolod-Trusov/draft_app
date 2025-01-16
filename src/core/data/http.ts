@@ -7,6 +7,7 @@ enum Routes {
   OAuthCallback = 'callback',
   OAuth = 'oauth',
   RootAuth = 'auth',
+  HubSpot = 'hubspot',
 
   ById = ':id',
 
