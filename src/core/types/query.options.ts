@@ -1,6 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import { IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
-import { ExceptionMessage } from 'core/data';
+
+import { ExceptionMessage } from 'core';
 
 class QueryOptions {
   @IsNumber()

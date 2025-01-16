@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AbstractBaseUseCase } from 'gateways';
+import { AbstractUserUseCase } from 'gateways';
 
 import { UserController } from './controller/user.controller';
 import { UserUseCase } from './use-case/user.use-case';
@@ -8,7 +8,7 @@ import { UserUseCase } from './use-case/user.use-case';
   controllers: [UserController],
   providers: [
     {
-      provide: AbstractBaseUseCase,
+      provide: AbstractUserUseCase,
       useClass: UserUseCase,
     },
   ],

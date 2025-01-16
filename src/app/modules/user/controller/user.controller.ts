@@ -1,17 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Params, QueryOptions, Routes } from 'core';
-import { AbstractBaseUseCase } from 'gateways';
+import { GlobalFilter, Params, QueryOptions, Routes } from 'core';
+import { AbstractUserUseCase } from 'gateways';
 import { Public } from 'libs';
 
+import { SimpleExpression } from 'core/utils/parseFilter';
 import { PartialUserDto, UserDto } from '../dto';
+import { throws } from 'assert';
 
 @ApiTags('Users')
 @Public()
 @Controller(Routes.UsersPrefix)
 export class UserController {
-  constructor(private readonly _userService: AbstractBaseUseCase) {}
+  constructor(private readonly _userService: AbstractUserUseCase) {}
 
   @Post()
   create(@Body() user: UserDto) {
@@ -29,6 +31,13 @@ export class UserController {
   @Get(Routes.ById)
   getOne(@Param(Params.Id) id: string) {
     return this._userService.getOne({ filter: { id: id } });
+  }
+
+  @Get('/filter')
+  getByFilter(@GlobalFilter() filter: SimpleExpression) {
+    console.log(JSON.stringify(filter, null, 2));
+
+    return this._userService.getByFilter(filter);
   }
 
   @Put(Routes.ById)

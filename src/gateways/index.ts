@@ -8,3 +8,4 @@ export * from './mail.interface';
 export * from './options.interface';
 export * from './repository';
 export * from './use-case.abstract-class';
+export * from './user-use-case.abstract-class';
