@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { GenericBaseUseCase } from 'core';
-import { OperationPrismaDictionary, SimpleExpression } from 'core/utils/parseFilter';
+import { CombinedExpression, OperationPrismaDictionary } from 'core/utils/parseFilter';
 import { AbstractUserUseCase, DatabaseService } from 'gateways';
 
 @Injectable()
@@ -11,43 +11,67 @@ export class UserUseCase extends GenericBaseUseCase<User> implements AbstractUse
     super(_dataService.userRepository);
   }
 
-  getByFilter({ operator, right, left }: SimpleExpression): Promise<User[]> {
+  getByFilter({ combined, children }: CombinedExpression): Promise<User[]> {
     let value = undefined;
-    const normalizedLeft = left.toLowerCase();
+
+    let combineSection = {};
+    let whereSection = {};
+
+    if (combined) {
+      combined = combined.toUpperCase() as 'and' | 'or';
+      combineSection = {
+        [combined]: [],
+      };
+    }
 
     const fields = Object.fromEntries(
       Object.entries(this._dataService.userRepository.user.fields).map(([key, value]) => [key.toLowerCase(), value]),
     );
-    const fieldType = fields[normalizedLeft]?.typeName;
-    const fieldName = fields[normalizedLeft]?.name;
 
-    if (!fieldType) {
-      throw new Error(`Field ${normalizedLeft} not found in the schema`);
-    }
+    for (const { left, right, operator } of children) {
+      const normalizedLeft = left.toLowerCase();
 
-    if (fieldType === 'DateTime' || fieldType === 'Date') {
-      value = new Date(right);
-      console.log(value);
+      const fieldType = fields[normalizedLeft]?.typeName;
+      const fieldName = fields[normalizedLeft]?.name;
 
-      if (!value || isNaN(new Date(value).getTime())) {
-        throw new Error('Invalid date string');
+      if (!fieldType) {
+        throw new Error(`Field ${normalizedLeft} not found in the schema`);
       }
-    } else if (fieldType === 'Int') {
-      value = +right;
-    } else if (fieldType === 'Boolean') {
-      value = right === 'true' ? true : false;
-    } else {
-      value = right;
+
+      if (fieldType === 'DateTime' || fieldType === 'Date') {
+        value = new Date(right);
+        console.log(value);
+
+        if (!value || isNaN(new Date(value).getTime())) {
+          throw new Error('Invalid date string');
+        }
+      } else if (fieldType === 'Int') {
+        value = +right;
+      } else if (fieldType === 'Boolean') {
+        value = right === 'true' ? true : false;
+      } else {
+        value = right;
+      }
+
+      if (combineSection[combined]) {
+        combineSection[combined].push({
+          [fieldName]: {
+            [`${OperationPrismaDictionary[operator]}`]: value,
+          },
+        });
+      } else {
+        whereSection = {
+          [fieldName]: {
+            [`${OperationPrismaDictionary[operator]}`]: value,
+          },
+        };
+      }
     }
 
-    const whereSection = {
-      [fieldName]: {
-        [`${OperationPrismaDictionary[operator]}`]: value,
-      },
+    const where = {
+      where: combineSection[combined] ? combineSection : whereSection,
     };
 
-    return this._dataService.userRepository.user.findMany({
-      where: whereSection,
-    });
+    return this._dataService.userRepository.user.findMany(where);
   }
 }

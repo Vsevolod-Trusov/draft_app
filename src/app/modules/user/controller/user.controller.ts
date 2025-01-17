@@ -5,9 +5,8 @@ import { GlobalFilter, Params, QueryOptions, Routes } from 'core';
 import { AbstractUserUseCase } from 'gateways';
 import { Public } from 'libs';
 
-import { SimpleExpression } from 'core/utils/parseFilter';
+import { CombinedExpression } from 'core/utils/parseFilter';
 import { PartialUserDto, UserDto } from '../dto';
-import { throws } from 'assert';
 
 @ApiTags('Users')
 @Public()
@@ -34,7 +33,7 @@ export class UserController {
   }
 
   @Get('/filter')
-  getByFilter(@GlobalFilter() filter: SimpleExpression) {
+  getByFilter(@GlobalFilter() filter: CombinedExpression) {
     console.log(JSON.stringify(filter, null, 2));
 
     return this._userService.getByFilter(filter);

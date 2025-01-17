@@ -4,6 +4,11 @@ type SimpleExpression = {
   right: string;
 };
 
+type CombinedExpression = {
+  combined: 'and' | 'or' | null;
+  children: SimpleExpression[];
+};
+
 const OperationPrismaDictionary = {
   eq: 'equals',
   ne: 'not',
@@ -11,31 +16,37 @@ const OperationPrismaDictionary = {
   ge: 'gte',
   lt: 'lt',
   le: 'lte',
+  and: 'and',
+  or: 'or',
 };
 
 class SimpleExpressionParser {
-  static parse(input: string): SimpleExpression | null {
-    input = input.trim();
+  static parse(input: string): CombinedExpression {
+    const regex = /(?:(\w+)\s(eq|ne|gt|ge|lt|le)\s([\w@.']+))(?:\s(and|or)\s)?/g;
 
-    for (const operator of Object.keys(OperationPrismaDictionary)) {
-      const parts = this.splitExpression(input, operator);
-      if (parts) {
-        const [left, right] = parts;
-        return {
-          left: left.trim(),
-          operator: operator,
-          right: right.trim(),
-        };
+    const matches = [...input.matchAll(regex)];
+    const result: CombinedExpression = {
+      combined: null,
+      children: [],
+    };
+
+    matches.forEach((match, index) => {
+      const [_, left, operator, right, combined] = match;
+
+      result.children.push({
+        left: left.trim(),
+        operator: operator.trim(),
+        right: right.trim(),
+      });
+
+      if (index === 0 && combined) {
+        result.combined = combined.trim() as 'and' | 'or';
       }
-    }
-    return null;
-  }
+    });
 
-  private static splitExpression(input: string, operator: string): string[] | null {
-    const regex = new RegExp(`(.*?)\\s${operator}\\s(.*)`);
-    const match = input.match(regex);
-    return match ? [match[1], match[2]] : null;
+    //@ts-ignore
+    return result;
   }
 }
 
-export { OperationPrismaDictionary, SimpleExpression, SimpleExpressionParser };
+export { CombinedExpression, OperationPrismaDictionary, SimpleExpression, SimpleExpressionParser };
